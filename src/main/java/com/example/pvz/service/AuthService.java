@@ -22,7 +22,7 @@ public class AuthService {
     public UserDto register(String email, String password, String role) {
         if (users.existsByEmail(email))
             throw new ApiException(HttpStatus.BAD_REQUEST, "email уже занят");
-        var u = new UserEntity();
+        UserEntity u = new UserEntity();
         u.setId(UUID.randomUUID());
         u.setEmail(email);
         u.setPasswordHash(encoder.encode(password));
@@ -32,7 +32,7 @@ public class AuthService {
     }
 
     public String login(String email, String password) {
-        var u = users.findByEmail(email)
+        UserEntity u = users.findByEmail(email)
                 .filter(x -> encoder.matches(password, x.getPasswordHash()))
                 .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "неверные учётные данные"));
         return jwt.generate(u.getId(), u.getRole());
