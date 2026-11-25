@@ -23,4 +23,13 @@ public class ReceptionRepository {
                 .param("pvz", pvzId)
                 .query(Reception.class).optional();
     }
+
+    public Optional<UUID> lockOpen(UUID pvzId) {
+        return jdbc.sql("""
+            SELECT id FROM receptions
+            WHERE pvz_id = :pvz AND status = 'in_progress'
+            FOR UPDATE""")
+                .param("pvz", pvzId).query(UUID.class).optional();
+    }
+
 }
