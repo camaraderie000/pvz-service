@@ -24,4 +24,10 @@ public class ReceptionService {
         return receptions.insertOpen(pvzId)
                 .orElseThrow(() -> new ApiException(HttpStatus.CONFLICT, "приёмка уже открыта"));
     }
+
+    @Transactional
+    public Reception close(UUID pvzId) {
+        return receptions.close(pvzId)
+                .orElseThrow(() -> new ApiException(HttpStatus.CONFLICT, "нет открытой приёмки"));
+    }
 }

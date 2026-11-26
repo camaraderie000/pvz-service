@@ -32,4 +32,11 @@ public class ReceptionRepository {
                 .param("pvz", pvzId).query(UUID.class).optional();
     }
 
+    public Optional<Reception> close(UUID pvzId) {
+        return jdbc.sql("""
+            UPDATE receptions SET status = 'close'
+            WHERE pvz_id = :pvz AND status = 'in_progress'
+            RETURNING id, date_time, pvz_id, status""")
+                .param("pvz", pvzId).query(Reception.class).optional();
+    }
 }
